@@ -4,11 +4,12 @@ import sys
 from lib import *
 
 board = sudoku_board(sys.argv)
+print("=======Input Board=======")
 sudoku_print(board)
+print()
 
-print(validate_x(board, 0))
-print(validate_y(board, 0))
-
-#solved = sudoku_solve(board)
-#
-#print(solved)
+if sudoku_solve(board):
+    print("=======Solved!===========")
+else:
+    print("=======Unsolvable!=======")
+sudoku_print(board)

@@ -31,44 +31,47 @@ def sudoku_board(args):
 
     return board
 
-
-def validate_x(board, row):
-    duplicate = {}
-    for index_x in range(len(board[row])):
-        if board[row][index_x] != "0":
-            if duplicate.get(board[row][index_x]) == 1:
-                return False
-            else:
-                duplicate[board[row][index_x]] = 1
-        else:
-            return False
-
-    for length in range(1, len(board[row])):
-        if duplicate.get(length):
+def valid_x(board, number, row):
+    for y in range(len(board[row])):
+        if board[row][y] == str(number):
             return False
 
     return True
 
-def validate_y(board, column):
-    duplicate = {}
-    for index_y in range(len(board)):
-        if board[index_y][column] != "0":
-            if duplicate.get(board[index_y][column]) == 1:
-                return False
-            else:
-                duplicate[board[index_y][column]] = 1
-        else:
-            return False
-
-    for length in range(1, len(board)):
-        if duplicate.get(length):
+def valid_y(board, number, column):
+    for x in range(len(board)):
+        if board[x][column] == str(number):
             return False
 
     return True
 
+def valid_group(board, number, row, column):
+    local_y = row - row % 3
+    local_x = column - column % 3
+
+    for y in range(3):
+        for x in range(3):
+            if board[y + local_y][x + local_x] == str(number):
+                return False
+
+    return True
+
+def valid(board, number, row, column):
+    return valid_x(board, number, row) and valid_y(board, number, column) and valid_group(board, number, row, column)
 
 def sudoku_solve(board):
-    return board
+    for row in range(len(board)):
+        for column in range(len(board[row])):
+            if board[row][column] == str(0):
+                for num in range(1, len(board[row]) + 1):
+                    if valid(board, num, row, column):
+                        board[row][column] = str(num)
+                        if sudoku_solve(board):
+                            return True
+                        else:
+                            board[row][column] = str(0)
+                return False
+    return True
 
 
 def sudoku_print(board):
